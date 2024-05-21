@@ -13,5 +13,9 @@ public interface ParticipateExRepository extends JpaRepository<ParticipateEx, Lo
     List<ParticipateEx> findByMemberId(String memberId);
 
     @Query("SELECT p FROM ParticipateEx p WHERE p.memberId = :memberId AND p.activity = :externalAct")
-    Optional<ParticipateEx> findByMemberAndExtAct(@Param("memberId") String memberId, @Param("externalAct")ExternalAct externalAct);
+    // Optional<ParticipateEx> findByMemberAndExtAct(@Param("memberId") String memberId, @Param("externalAct")ExternalAct externalAct);
+
+
+    List<ParticipateEx> findByMemberAndExtAct(String memberId, ExternalAct externalAct);
+
 }
