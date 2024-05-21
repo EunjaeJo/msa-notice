@@ -72,6 +72,7 @@ public class ExtActService {
         return resultList;
     }
 
+    /*
     public ExtActListResponseDto findById(String memberId, Long id) {
         ExternalAct e = externalActRepository.findById(id).orElseThrow(()->new IllegalArgumentException("해당 대외활동 정보가 존재하지 않습니다."));
 
@@ -89,7 +90,7 @@ public class ExtActService {
             return new ExtActListResponseDto(e, 0, 0);
 
         }
-    }
+    } */
 
     //========= 대외활동 참여 여부 체크 ===========
 
@@ -106,12 +107,29 @@ public class ExtActService {
     }
 
     @Transactional
-    //대외활동 좋아요 취소
+// 대외활동 좋아요 취소
     public void deleteCheck(String memberId, Long id) {
-        ExternalAct e = externalActRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("해당 대외활동 정보를 조회할 수 없습니다."));
-        ParticipateEx participateEx = participateExRepository.findByMemberAndExtAct(memberId,e).orElseThrow(() -> new IllegalArgumentException(("해당 참여 체크 항목이 없습니다.")));
-        participateExRepository.delete(participateEx);
+        ExternalAct e = externalActRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 대외활동 정보를 조회할 수 없습니다."));
+        List<ParticipateEx> participateExList = participateExRepository.findByMemberAndExtAct(memberId, e);
+
+        if (participateExList.isEmpty()) {
+            throw new IllegalArgumentException("해당 참여 체크 항목이 없습니다.");
+        }
+
+        for (ParticipateEx participateEx : participateExList) {
+            participateExRepository.delete(participateEx);
+        }
     }
+
+    @Transactional
+    public void deleteCheck2(String memberId, List<Long> ids) {
+        for (Long id : ids) {
+            deleteCheck(memberId, id); // 개별 ID 삭제 로직을 재사용합니다.
+        }
+    }
+
+
 
     //회원의 참여 체크한 대외활동 목록 조회
     public List<ExtActListResponseDto> findCheckedByUser(String memberId) {
