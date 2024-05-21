@@ -27,12 +27,12 @@ public class ExtActivityApiController {
         return extActService.findByTitle(keyword);
     }
 
-
+/*
     @GetMapping("/id")
     public ExtActListResponseDto findById(@RequestParam String memberId, @RequestParam Long id) {
         return extActService.findById(memberId, id);
     }
-
+*/
 
     //====== 대외활동 좋아요 눌렀을 때 =======
     @PostMapping("like")
@@ -70,6 +70,13 @@ public class ExtActivityApiController {
         extActService.deleteCheck(memberId, id);
         return id;
     }
+
+    @DeleteMapping("/check-cancel2")
+    public List<Long> deleteCheck(@RequestParam String memberId, @RequestParam List<Long> ids) {
+        extActService.deleteCheck2(memberId, ids); // List<Long>를 받는 메서드를 호출합니다.
+        return ids;
+    }
+
 
     @GetMapping("/checked-list")
     public List<ExtActListResponseDto> findCheckedByMember(@RequestParam String memberId) {
